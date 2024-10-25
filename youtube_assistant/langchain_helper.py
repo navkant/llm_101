@@ -5,8 +5,8 @@ from langchain import PromptTemplate
 from langchain.chains import LLMChain
 from langchain.vectorstores import FAISS
 from dotenv import load_dotenv
-from litellm import embedding
-from lite_llm_embeddings import LiteLLMEmbedding
+from my_llm.lite_llm_embeddings import LiteLLMEmbedding
+
 
 load_dotenv()
 

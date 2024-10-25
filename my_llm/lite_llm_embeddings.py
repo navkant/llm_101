@@ -3,9 +3,14 @@ from litellm import embedding
 
 
 class LiteLLMEmbedding(Embeddings):
+
+    def __init__(self, provider: str, model: str):
+        self.provider = provider
+        self.model = model
+
     def embed_documents(self, texts: list[str]) -> list[list[float]]:
         response = embedding(
-            model="azure/text-embedding-3-small",
+            model=f"{self.provider}/{self.model}",
             input=texts,
         )
 
@@ -17,7 +22,7 @@ class LiteLLMEmbedding(Embeddings):
 
     def embed_query(self, text: str) -> list[float]:
         response = embedding(
-            model="azure/text-embedding-3-small",
+            model=f"{self.provider}/{self.model}",
             input=text,
         )
 
