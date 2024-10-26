@@ -18,6 +18,10 @@ numexpr = "^2.10.1"
 youtube-transcript-api = "^0.6.2"
 faiss-cpu = "^1.9.0"
 neo4j = "^5.25.0"
+tiktoken = "^0.8.0"
+langchain-experimental = "^0.3.2"
+json-repair = "^0.30.0"
+langchain-openai = "^0.2.3"
 
 
 [build-system]
