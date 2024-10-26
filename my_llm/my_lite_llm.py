@@ -6,7 +6,7 @@ from my_llm.lite_llm_embeddings import LiteLLMEmbedding
 
 
 class MyLiteLLM:
-    def __init__(self, provider: str, model: str, temperature: float):
+    def __init__(self, provider: str = "azure", model: str = "gpt-4o-global", temperature: float = 0):
         self.model = model
         self.provider = provider
         self.temperature = temperature
@@ -36,5 +36,5 @@ class MyLiteLLM:
 
         return response.data[0]["embedding"]
 
-    def get_embedding_model(self) -> Embeddings:
-        return LiteLLMEmbedding(provider=self.provider, model=self.model)
+    def get_embedding_model(self, embedding_model: str = "text-embedding-3-small") -> Embeddings:
+        return LiteLLMEmbedding(provider=self.provider, model=embedding_model)

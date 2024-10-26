@@ -1,3 +1,10 @@
+from pathlib import Path
+import sys
+
+path = Path(__file__)
+sys.path.append(str(path.resolve().parent.parent))
+
+
 from langchain.document_loaders import YoutubeLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.chat_models import ChatLiteLLM
@@ -6,7 +13,7 @@ from langchain.chains import LLMChain
 from langchain.vectorstores import FAISS
 from dotenv import load_dotenv
 from my_llm.lite_llm_embeddings import LiteLLMEmbedding
-
+from my_llm.my_lite_llm import MyLiteLLM
 
 load_dotenv()
 
@@ -17,7 +24,8 @@ def create_vector_db_from_youtube_url(video_url: str) -> FAISS:
     transcript = loader.load()
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
     docs = text_splitter.split_documents(transcript)
-    embeddings = LiteLLMEmbedding()
+    llm = MyLiteLLM()
+    embeddings = llm.get_embedding_model()
 
     db = FAISS.from_documents(docs, embeddings)
     return db
@@ -27,9 +35,6 @@ def get_response_from_query(db, query, k=4):
     docs = db.similarity_search(query=query, k=k)
     docs_page_content = " ".join(d.page_content for d in docs)
 
-    llm = ChatLiteLLM(
-        model="azure/gpt-4o-global",
-    )
     prompt = PromptTemplate(
         input_variables=["question", "docs"],
         template="""
@@ -42,12 +47,11 @@ def get_response_from_query(db, query, k=4):
         Your answers should be detailed.
         """
     )
-
+    llm = MyLiteLLM()
     chain = LLMChain(
-        llm=llm, prompt=prompt
+        llm=llm.get_chat_model(), prompt=prompt
     )
 
     response = chain.run(question=query, docs=docs_page_content)
     response = response.replace("\n", " ")
-    breakpoint()
     return response
